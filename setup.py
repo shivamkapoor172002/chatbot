@@ -1,17 +1,18 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
 setup(
-    name='streamlit-chat-app',
-    version='1.0.0',
-    author='Your Name',
-    author_email='your@email.com',
-    description='Streamlit Chat App',
-    packages=find_packages(),
+    name="text_generation_app",
+    version="1.0",
+    description="A text generation application",
+    author="Your Name",
+    author_email="your_email@example.com",
     install_requires=[
-        'streamlit',
-        'transformers',
-        'torch',
-        'sentence-transformers',
-        # Add other dependencies here
+        "torch",
+        "transformers"
     ],
+    entry_points={
+        "console_scripts": [
+            "text_generation_app=main:main"
+        ]
+    },
 )
