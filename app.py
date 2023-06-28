@@ -4,7 +4,7 @@ import transformers
 import torch
 
 def run_text_generation():
-    model = "tiiuae/falcon-7b-instruct"
+    model = "shivam001/deibotquestion"
     tokenizer = AutoTokenizer.from_pretrained(model)
     pipeline = transformers.pipeline(
         "text-generation",
