@@ -1,37 +1,34 @@
+import streamlit as st
+from transformers import AutoTokenizer, AutoModelForCausalLM
+import transformers
 import torch
-from transformers import AutoTokenizer, AutoModelForCausalLM, pipeline
 
-# Load the model and tokenizer
-model_name = "tiiuae/falcon-7b"
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForCausalLM.from_pretrained(model_name)
-
-# Create a text generation pipeline
-text_generator = pipeline(
-    "text-generation",
-    model=model,
-    tokenizer=tokenizer,
-    torch_dtype=torch.bfloat16,
-    trust_remote_code=True,
-    device_map="auto",
-)
-
-
-def generate_text(prompt, max_length=200, top_k=10, num_return_sequences=1):
-    sequences = text_generator(
-        prompt,
-        max_length=max_length,
+def run_text_generation():
+    model = "tiiuae/falcon-7b-instruct"
+    tokenizer = AutoTokenizer.from_pretrained(model)
+    pipeline = transformers.pipeline(
+        "text-generation",
+        model=model,
+        tokenizer=tokenizer,
+        torch_dtype=torch.bfloat16,
+        trust_remote_code=True,
+        device_map="auto",
+    )
+    sequences = pipeline(
+       "Girafatron is obsessed with giraffes, the most glorious animal on the face of this Earth. Giraftron believes all other animals are irrelevant when compared to the glorious majesty of the giraffe.\nDaniel: Hello, Girafatron!\nGirafatron:",
+        max_length=200,
         do_sample=True,
-        top_k=top_k,
-        num_return_sequences=num_return_sequences,
+        top_k=10,
+        num_return_sequences=1,
         eos_token_id=tokenizer.eos_token_id,
     )
-    return sequences[0]["generated_text"]
+    for seq in sequences:
+        st.write(f"Result: {seq['generated_text']}")
 
+def main():
+    st.title("Text Generation with Falcon-7B")
+    if st.button("Generate Text"):
+        run_text_generation()
 
-# Local app
-prompt = input("Enter the prompt: ")
-generated_text = generate_text(prompt)
-
-print("\nGenerated Text:")
-print(generated_text)
+if __name__ == "__main__":
+    main()
